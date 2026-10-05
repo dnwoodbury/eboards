@@ -91,14 +91,14 @@
             NC STATE
           </div>
           <div>
-            <h1 class="font-display font-black text-xl tracking-wide uppercase leading-tight text-white">Academic Calendar</h1>
+            <h1 class="font-display font-black text-2xl tracking-wide uppercase leading-tight text-white">Academic Calendar</h1>
           </div>
         </div>
 
         <!-- Real-Time Clock & Date Display -->
         <div class="text-right">
-          <div id="liveClock" class="font-mono font-bold text-lg leading-none tracking-tight">--:-- --</div>
-          <div id="liveDate" class="text-[11px] text-red-100 font-bold uppercase tracking-wider mt-1">-- --- ----</div>
+          <div id="liveClock" class="font-mono font-bold text-xl leading-none tracking-tight">--:-- --</div>
+          <div id="liveDate" class="text-xs text-red-100 font-bold uppercase tracking-wider mt-1">-- --- ----</div>
         </div>
       </div>
     </header>
@@ -113,16 +113,16 @@
           <div class="p-1.5 rounded-lg bg-ncsu-carmichael/10 text-ncsu-carmichael">
             <i class="fa-solid fa-hourglass-half text-sm"></i>
           </div>
-          <h2 class="font-display font-black text-slate-800 text-sm uppercase tracking-wider">Countdown To End Of Semester</h2>
+          <h2 class="font-display font-black text-slate-800 text-lg uppercase tracking-wider">Countdown To End Of Semester</h2>
         </div>
 
         <!-- Single Days Display -->
         <div class="my-2 py-3 bg-gradient-to-b from-slate-50 to-slate-100/70 rounded-xl border border-slate-200/80 shadow-inner flex flex-col items-center justify-center">
-          <span id="daysRemaining" class="font-display font-black text-6xl sm:text-7xl text-ncsu-carmichael leading-none tracking-tight">--</span>
-          <span class="text-xs font-black text-slate-500 uppercase tracking-widest mt-2">Days Remaining</span>
+          <span id="daysRemaining" class="font-display font-black text-8xl sm:text-9xl text-ncsu-carmichael leading-none tracking-tight">--</span>
+          <span class="text-sm font-black text-slate-500 uppercase tracking-widest mt-2">Days Remaining</span>
         </div>
 
-        <p class="text-[11px] font-semibold text-slate-500 mt-1">
+        <p class="text-xs font-semibold text-slate-500 mt-1">
           Until Final Exams End • <span class="text-ncsu-carmichael font-bold">Dec 9, 2026</span>
         </p>
       </section>
@@ -132,18 +132,18 @@
         <div class="flex items-center justify-between mb-1.5">
           <div class="flex items-center space-x-1.5">
             <i class="fa-solid fa-bell text-ncsu-pyroman text-sm"></i>
-            <span class="text-[11px] font-extrabold uppercase tracking-wider text-ncsu-pyroman">Up Next</span>
+            <span class="text-sm font-extrabold uppercase tracking-wider text-ncsu-pyroman">Up Next</span>
           </div>
-          <span id="nextDaysBadge" class="text-[10px] font-bold bg-ncsu-pyroman text-white px-2 py-0.5 rounded-md shadow-sm">Upcoming</span>
+          <span id="nextDaysBadge" class="text-xs font-bold bg-ncsu-pyroman text-white px-2 py-0.5 rounded-md shadow-sm">Upcoming</span>
         </div>
 
-        <h3 id="nextTitle" class="font-display font-bold text-slate-900 text-lg leading-snug">--</h3>
-        <div class="mt-2 flex items-center justify-between text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
+        <h3 id="nextTitle" class="font-display font-bold text-slate-900 text-2xl leading-snug">--</h3>
+        <div class="mt-2 flex items-center justify-between text-sm text-slate-600 font-semibold border-t border-slate-100 pt-2">
           <div class="flex items-center space-x-1.5 text-ncsu-reynolds font-bold">
             <i class="fa-regular fa-calendar-check"></i>
             <span id="nextDate">--</span>
           </div>
-          <span id="nextType" class="bg-slate-100 px-2 py-0.5 rounded text-[10px] uppercase font-bold text-slate-700">Scheduled</span>
+          <span id="nextType" class="bg-slate-100 px-2 py-0.5 rounded text-xs uppercase font-bold text-slate-700">Scheduled</span>
         </div>
       </section>
 
@@ -154,9 +154,9 @@
             <div class="p-1.5 rounded-lg bg-ncsu-indigo/10 text-ncsu-indigo">
               <i class="fa-solid fa-calendar-days text-base"></i>
             </div>
-            <h2 class="font-display font-black text-slate-900 text-base uppercase tracking-wide">Upcoming Dates</h2>
+            <h2 class="font-display font-black text-slate-900 text-xl uppercase tracking-wide">Upcoming Dates</h2>
           </div>
-          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Fall 2026</span>
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Fall 2026</span>
         </div>
 
         <!-- Event List - Shows Future Dates Only -->
@@ -291,12 +291,12 @@
               <i class="fa-solid ${iconClass} text-xs"></i>
             </div>
             <div>
-              <div class="font-bold text-xs text-slate-900 leading-tight">${ev.title}</div>
-              <div class="text-[10px] text-slate-500 font-medium">${ev.desc}</div>
+              <div class="font-bold text-base text-slate-900 leading-tight">${ev.title}</div>
+              <div class="text-xs text-slate-500 font-medium">${ev.desc}</div>
             </div>
           </div>
           <div class="text-right flex-none pl-2">
-            <div class="text-xs font-black text-slate-800">${formatDate(ev.date)}</div>
+            <div class="text-sm font-black text-slate-800">${formatDate(ev.date)}</div>
           </div>
         `;
 
