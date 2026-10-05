@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NC State Academic Calendar Display</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts - Inter & Roboto Condensed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Roboto+Condensed:wght@700;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind Configuration for NC State Expanded Palette -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Roboto Condensed', 'sans-serif'],
+          },
+          colors: {
+            ncsu: {
+              red: '#CC0000',          /* Wolfpack Red */
+              black: '#000000',        /* Wolfpack Black */
+              reynolds: '#990000',     /* Reynolds Red */
+              pyroman: '#D14905',      /* Pyroman Flame */
+              hunt: '#FAC800',         /* Hunt Yellow */
+              genomic: '#6F7D1C',      /* Genomic Green */
+              carmichael: '#008473',   /* Carmichael Aqua */
+              innovation: '#427E93',   /* Innovation Blue */
+              indigo: '#4156A1',       /* Bio-Indigo */
+              offwhite: '#F6F6F8',
+            }
+          },
+          boxShadow: {
+            'card-deep': '0 10px 30px -5px rgba(0, 0, 0, 0.12), 0 4px 10px -5px rgba(0, 0, 0, 0.05)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* CSS Viewport Aspect Ratio constraints for 9:16 Signage */
+    body {
+      background-color: #0a0c0e;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* Strict 9:16 Ratio Container for Digital Display Screens */
+    .screen-container {
+      width: 100vw;
+      height: 100vh;
+      max-width: calc(100vh * (9 / 16));
+      max-height: calc(100vw * (16 / 9));
+      aspect-ratio: 9 / 16;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Custom scrollbar for events list */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.03);
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen text-slate-800 antialiased">
+
+  <div class="screen-container bg-ncsu-offwhite flex flex-col justify-between shadow-2xl border-x border-slate-800">
+
+    <!-- SIMPLIFIED HEADER -->
+    <header class="bg-gradient-to-r from-ncsu-reynolds via-ncsu-red to-ncsu-reynolds text-white px-6 py-5 shadow-lg relative z-20 flex-none">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <!-- NC State Block Logo -->
+          <div class="bg-white text-ncsu-red font-black font-display text-2xl tracking-tighter px-2.5 py-1 rounded shadow-md border border-slate-200">
+            NC STATE
+          </div>
+          <div>
+            <h1 class="font-display font-black text-xl tracking-wide uppercase leading-tight text-white">Academic Calendar</h1>
+          </div>
+        </div>
+
+        <!-- Real-Time Clock & Date Display -->
+        <div class="text-right">
+          <div id="liveClock" class="font-mono font-bold text-lg leading-none tracking-tight">--:-- --</div>
+          <div id="liveDate" class="text-[11px] text-red-100 font-bold uppercase tracking-wider mt-1">-- --- ----</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 overflow-hidden p-5 space-y-4 flex flex-col">
+
+      <!-- CARD 1: DAYS COUNTDOWN HERO (Carmichael Aqua) -->
+      <section class="bg-white rounded-2xl p-5 shadow-card-deep border-t-8 border-ncsu-carmichael relative overflow-hidden flex-none text-center">
+        <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-ncsu-carmichael/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <div class="flex items-center justify-center space-x-2 mb-1">
+          <div class="p-1.5 rounded-lg bg-ncsu-carmichael/10 text-ncsu-carmichael">
+            <i class="fa-solid fa-hourglass-half text-sm"></i>
+          </div>
+          <h2 class="font-display font-black text-slate-800 text-sm uppercase tracking-wider">Countdown To End Of Semester</h2>
+        </div>
+
+        <!-- Single Days Display -->
+        <div class="my-2 py-3 bg-gradient-to-b from-slate-50 to-slate-100/70 rounded-xl border border-slate-200/80 shadow-inner flex flex-col items-center justify-center">
+          <span id="daysRemaining" class="font-display font-black text-6xl sm:text-7xl text-ncsu-carmichael leading-none tracking-tight">--</span>
+          <span class="text-xs font-black text-slate-500 uppercase tracking-widest mt-2">Days Remaining</span>
+        </div>
+
+        <p class="text-[11px] font-semibold text-slate-500 mt-1">
+          Until Final Exams End • <span class="text-ncsu-carmichael font-bold">Dec 9, 2026</span>
+        </p>
+      </section>
+
+      <!-- CARD 2: NEXT UPCOMING MILESTONE (Pyroman Flame) -->
+      <section class="bg-gradient-to-br from-orange-500/10 via-white to-white rounded-2xl p-4 shadow-card-deep border-l-8 border-ncsu-pyroman flex-none relative overflow-hidden">
+        <div class="flex items-center justify-between mb-1.5">
+          <div class="flex items-center space-x-1.5">
+            <i class="fa-solid fa-bell text-ncsu-pyroman text-sm"></i>
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-ncsu-pyroman">Up Next</span>
+          </div>
+          <span id="nextDaysBadge" class="text-[10px] font-bold bg-ncsu-pyroman text-white px-2 py-0.5 rounded-md shadow-sm">Upcoming</span>
+        </div>
+
+        <h3 id="nextTitle" class="font-display font-bold text-slate-900 text-lg leading-snug">--</h3>
+        <div class="mt-2 flex items-center justify-between text-xs text-slate-600 font-semibold border-t border-slate-100 pt-2">
+          <div class="flex items-center space-x-1.5 text-ncsu-reynolds font-bold">
+            <i class="fa-regular fa-calendar-check"></i>
+            <span id="nextDate">--</span>
+          </div>
+          <span id="nextType" class="bg-slate-100 px-2 py-0.5 rounded text-[10px] uppercase font-bold text-slate-700">Scheduled</span>
+        </div>
+      </section>
+
+      <!-- CARD 3: UPCOMING ACADEMIC DATES SCHEDULE (Bio-Indigo Accent) -->
+      <section class="bg-white rounded-2xl p-4 shadow-card-deep border-t-8 border-ncsu-indigo flex-1 flex flex-col overflow-hidden">
+        <div class="flex items-center justify-between mb-3 flex-none">
+          <div class="flex items-center space-x-2">
+            <div class="p-1.5 rounded-lg bg-ncsu-indigo/10 text-ncsu-indigo">
+              <i class="fa-solid fa-calendar-days text-base"></i>
+            </div>
+            <h2 class="font-display font-black text-slate-900 text-base uppercase tracking-wide">Upcoming Dates</h2>
+          </div>
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Fall 2026</span>
+        </div>
+
+        <!-- Event List - Shows Future Dates Only -->
+        <div id="eventsContainer" class="space-y-2 overflow-y-auto custom-scroll flex-1 pr-1">
+          <!-- Dynamically Populated by JavaScript -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- CLEAN FOOTER -->
+    <footer class="bg-ncsu-black text-white p-3.5 text-center text-xs flex-none border-t border-slate-800 relative z-20">
+      <div class="text-[11px] font-bold text-slate-400 tracking-wider uppercase">
+        North Carolina State University
+      </div>
+    </footer>
+
+  </div>
+
+  <script>
+    // Official NC State Academic Calendar Data (Fall 2026)
+    const fall2026Events = [
+      { title: "First Day of Classes", date: "2026-08-17", type: "regular", desc: "Official start of Fall classes" },
+      { title: "Labor Day Holiday", date: "2026-09-07", type: "holiday", desc: "University Closed" },
+      { title: "Wellness Day", date: "2026-09-29", type: "holiday", desc: "No Classes Held" },
+      { title: "Fall Break", date: "2026-10-19", type: "holiday", desc: "No Classes (Oct 19 - 20)" },
+      { title: "Thanksgiving Recess", date: "2026-11-25", type: "holiday", desc: "No Classes (Nov 25 - 27)" },
+      { title: "Last Day of Classes", date: "2026-12-01", type: "regular", desc: "End of regular lectures" },
+      { title: "Reading Day", date: "2026-12-02", type: "regular", desc: "Preparation for final exams" },
+      { title: "Final Examinations", date: "2026-12-03", type: "exam", desc: "Exams begin (Dec 3 - 9)" },
+      { title: "Final Examinations End", date: "2026-12-09", type: "exam", desc: "Official term end" },
+      { title: "Fall Commencement", date: "2026-12-12", type: "regular", desc: "Graduation Ceremony" }
+    ];
+
+    const semesterEndDate = "2026-12-09T23:59:59";
+
+    // Real-Time Clock & Date Update
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit' });
+      const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+      document.getElementById('liveClock').textContent = timeStr;
+      document.getElementById('liveDate').textContent = dateStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr + "T00:00:00");
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    // Days-Only Countdown Logic
+    function updateCountdown() {
+      const target = new Date(semesterEndDate).getTime();
+      const now = new Date().getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById("daysRemaining").textContent = "0";
+        return;
+      }
+
+      // Calculate total full days remaining
+      const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+      document.getElementById("daysRemaining").textContent = String(days);
+    }
+
+    // Render Display Schedule (FUTURE DATES ONLY)
+    function renderSchedule() {
+      const container = document.getElementById("eventsContainer");
+      container.innerHTML = "";
+      const now = new Date();
+      // Set to start of today for accurate date comparison
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+      // Filter to keep ONLY upcoming/future dates
+      const upcomingEvents = fall2026Events.filter(ev => {
+        const evDate = new Date(ev.date + "T23:59:59");
+        return evDate >= todayStart;
+      });
+
+      if (upcomingEvents.length === 0) {
+        document.getElementById("nextTitle").textContent = "Semester Complete";
+        document.getElementById("nextDate").textContent = "All term events finished";
+        document.getElementById("nextType").textContent = "COMPLETED";
+        document.getElementById("nextDaysBadge").textContent = "Finished";
+
+        container.innerHTML = `
+          <div class="text-center py-8 text-slate-400 font-medium text-xs">
+            <i class="fa-solid fa-flag-checkered text-2xl mb-2 text-slate-300"></i>
+            <div>No remaining events for this term.</div>
+          </div>
+        `;
+        return;
+      }
+
+      // First upcoming event populates the "Up Next" hero card
+      const nextEvent = upcomingEvents[0];
+      document.getElementById("nextTitle").textContent = nextEvent.title;
+      document.getElementById("nextDate").textContent = formatDate(nextEvent.date);
+      document.getElementById("nextType").textContent = nextEvent.type.toUpperCase();
+
+      const nextEvDate = new Date(nextEvent.date + "T23:59:59");
+      const diffMs = nextEvDate.getTime() - now.getTime();
+      const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+      document.getElementById("nextDaysBadge").textContent = daysLeft > 0 ? `In ${daysLeft} Days` : "Today";
+
+      // Render all future events
+      upcomingEvents.forEach(ev => {
+        let borderClass = "border-ncsu-innovation";
+        let bgClass = "bg-slate-50";
+        let iconClass = "fa-calendar-day text-ncsu-innovation";
+
+        if (ev.type === "holiday") {
+          borderClass = "border-ncsu-hunt";
+          bgClass = "bg-amber-50/50";
+          iconClass = "fa-umbrella-beach text-amber-600";
+        } else if (ev.type === "exam") {
+          borderClass = "border-ncsu-indigo";
+          bgClass = "bg-indigo-50/40";
+          iconClass = "fa-file-pen text-ncsu-indigo";
+        }
+
+        const item = document.createElement("div");
+        item.className = `p-3 rounded-xl border-l-4 ${borderClass} ${bgClass} shadow-sm flex items-center justify-between`;
+
+        item.innerHTML = `
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-white shadow-sm border border-slate-200 flex-none">
+              <i class="fa-solid ${iconClass} text-xs"></i>
+            </div>
+            <div>
+              <div class="font-bold text-xs text-slate-900 leading-tight">${ev.title}</div>
+              <div class="text-[10px] text-slate-500 font-medium">${ev.desc}</div>
+            </div>
+          </div>
+          <div class="text-right flex-none pl-2">
+            <div class="text-xs font-black text-slate-800">${formatDate(ev.date)}</div>
+          </div>
+        `;
+
+        container.appendChild(item);
+      });
+    }
+
+    // Initialize display board
+    updateCountdown();
+    renderSchedule();
+  </script>
+</body>
+</html>
